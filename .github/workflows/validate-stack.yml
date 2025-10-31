@@ -20,6 +20,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Fail if .env.example contains placeholders
+        run: |
+          # Fail early if the example env file still has placeholder values
+          if grep -Eqi 'REPLACE_ME|CHANGEME' .env.example; then
+            echo "ERROR: .env.example contains placeholder values (REPLACE_ME or CHANGEME). Aborting." >&2
+            echo "Matched lines:" >&2
+            grep -En "REPLACE_ME|CHANGEME" .env.example | sed 's/^/ - /' >&2
+            exit 1
+          fi
       # This step uses the modern 'docker compose' command with the '--env-file' flag.
       # This tells Compose to load its variables directly from our non-secret .env.example file.
       - name: Validate Docker Compose configuration
