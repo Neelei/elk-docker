@@ -257,6 +257,8 @@ services:
     ports:
       - ${FLEET_PORT}:8220
       - ${APMSERVER_PORT}:8200
+      - "9001:9001/udp"
+      - "9001:9001/tcp"
     user: root
     environment:
       - SSL_CERTIFICATE_AUTHORITIES=/certs/ca/ca.crt
